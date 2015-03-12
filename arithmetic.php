@@ -29,7 +29,7 @@ function multiply($a, $b) {
 
 function divide($a, $b) {
 	if (is_numeric($a) && is_numeric($b)) {
-		if($a !== 0){
+		if($a !== 0 && $b !== 0){
     		return $a / $b;
 		}
 		else{
@@ -66,5 +66,16 @@ multiply($a, $b);
 divide($a, $b);
 modulus($a, $b);
 
+if (divide(4,0)) {
+	echo divide(4,0);
+} else {
+	echo "\nerror error error error error error\n";
+}
 
+if (multiply(4,2)) {
+	echo multiply(4,2);
+} else {
+	echo "\n error message \n";
+}
+ 
 ?>
