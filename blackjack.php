@@ -1,73 +1,108 @@
 <?php
-// complete all "todo"s to build a blackjack game
-// create an array for suits
 $suits = ['C', 'H', 'S', 'D'];
-// create an array for cards
 $cards = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
 
-
-// build a deck (array) of cards
 // card values should be "VALUE SUIT". ex: "7 H"
 // make sure to shuffle the deck before returning it
 function buildDeck($suits, $cards) {
 $deq = [];
   foreach($suits as $suit){
   	foreach($cards as $card){
-  		$combo = [$suit => $card];
+  		$combo = [$card => $suit];
   		// print_r($combo);
   		array_push($deq, $combo);
   	}
   }
   // print_r($deq);
   // print_r($deq)[3];
+  shuffle($deq);
   return $deq;
 }
 $deq = buildDeck($suits, $cards);
-
 // print_r($deq);
 // determine if a card is an ace
 // return true for ace, false for anything else
-function cardIsAce($card) {
-	if($card == 'A'){
-		return true;
-	} else {
-		return false;
+function cardIsAce($thisCard) {
+	foreach($thisCard as $key => $card) {
+		if($key == 'A'){
+			return true;
+		} else {
+			return false;
+		}
 	}
-  // todo
 }
 
-print_r($deq[3]);
+// print_r($deq[3]);
 
-var_dump(cardIsAce($deq[13]));
-// // determine the value of an individual card (string)
-// // aces are worth 11
-// // face cards are worth 10
-// // numeric cards are worth their value
-// function getCardValue($card) {
-//   // todo
-// }
+var_dump(cardIsAce($deq[39]));
+var_dump(array_keys($deq[39]));
+// print_r($deq[39]);
+// var_dump (array_keys($deq[39]));
+// TO PRINT WHOLE DECK:
+// print_r($deq);
+// determine the value of an individual card (string)
+// aces are worth 11
+function getCardValue($card) {
+  foreach($card as $key => $value){
+  	if($key != 'A' && is_numeric($key)){
+  		return $key;
+  	} elseif($key != 'A'){
+  		return 10;
+  	} else{
+  		return 11;
+  	}
+  }
+}
+
+echo (getCardValue($deq[32])) . PHP_EOL;
+echo (getCardValue($deq[11])) . PHP_EOL;
 // // get total value for a hand of cards
 // // don't forget to factor in aces
 // // aces can be 1 or 11 (make them 1 if total value is over 21)
-// function getHandTotal($hand) {
-//   // todo
-// }
+function getHandTotal($hand) {
+  $count = 0;
+  foreach($hand as $card){
+  	$count = $count + getCardValue($hand);
+  }
+  return $count;
+}
+
+echo getHandTotal($deq[32], $deq[14]);
+
 // // draw a card from the deck into a hand
 // // pass by reference (both hand and deck passed in are modified)
-// function drawCard(&$hand, &$deck) {
-//   // todo
-// }
+function drawCard(&$hand, &$deq) {
+	foreach($deq as $key => $value){
+		array_shift($deq);
+		array_shift($deq);
+		$hand = getCardValue($deq[0]) + getCardValue($deq[1]);
+		return $hand;
+	}
+}
+
+drawCard($hand, $deq);
+
+echo "first card is " . getCardValue($deq[0]) . " ";
+echo "second card is " . getCardValue($deq[1]) . " ";
+echo "value of hand is " . $hand . PHP_EOL;
+
+
 // // print out a hand of cards
 // // name is the name of the player
 // // hidden is to initially show only first card of hand (for dealer)
 // // output should look like this:
 // // Dealer: [4 C] [???] Total: ???
 // // or:
+// PROBLEM STARTS HERE:
 // // Player: [J D] [2 D] Total: 12
-// function echoHand($hand, $name, $hidden = false) {
-//   // todo
-// }
-// // build the deck of cards
+function echoHand($hand, $name, $hidden = false) {
+  echo "$name: " ;
+  echo $deq[0];
+}
+
+echoHand($hand, "PABLO");
+
+// build the deck of cards
 // $deck = buildDeck($suits, $cards);
 // // initialize a dealer and player hand
 // $dealer = [];
