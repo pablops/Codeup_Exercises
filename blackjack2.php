@@ -34,8 +34,8 @@ function cardIsAce($thisCard) {
 
 // print_r($deck[3]);
 
-var_dump(cardIsAce($deck[39]));
-var_dump(array_keys($deck[39]));
+// var_dump(cardIsAce($deck[39]));
+// var_dump(array_keys($deck[39]));
 // print_r($deck[39]);
 // var_dump (array_keys($deck[39]));
 // TO PRINT WHOLE DECK:
@@ -69,23 +69,32 @@ function getHandTotal($hand) {
 
 echo getHandTotal($deck[32], $deck[14]);
 
+// build the deck of cards
+$deck = buildDeck($suits, $cards);
+// // initialize a dealer and player hand
+$dealer = [];
+$player = [];
 // // draw a card from the deck into a hand
 // // pass by reference (both hand and deck passed in are modified)
-function drawCard(&$hand, &$deck) {
-	foreach($deck as $key => $value){
-		array_shift($deck);
-		array_shift($deck);
-		$hand = getCardValue($deck[0]) + getCardValue($deck[1]);
-		return $hand;
-		return $deck;
-	}
+function drawCards(&$deck, &$dealer, &$player) {
+	// dealer and player each draw two cards
+  array_push($dealer, array_shift($deck));
+  array_push($dealer, array_shift($deck));
+  array_push($player, array_shift($deck));
+  array_push($player, array_shift($deck));
+  return($player);
+  return($dealer);
 }
 
-drawCard($hand, $deck);
+drawCards($deck, $dealer, $player);
+echo "dealer: ";
+var_dump($dealer);
+echo "player: ";
+var_dump($player);
 
-echo "first card is " . getCardValue($deck[0]) . " ";
-echo "second card is " . getCardValue($deck[1]) . " ";
-echo "value of hand is " . $hand . PHP_EOL;
+echo "first card is " . getCardValue($player[0]) . " ";
+// echo "second card is " . getCardValue($deck[1]) . " ";
+// echo "value of hand is " . $hand . PHP_EOL;
 
 // // print out a hand of cards
 // // name is the name of the player
@@ -102,27 +111,6 @@ echo "value of hand is " . $hand . PHP_EOL;
 
 // echoHand($hand, "PABLO");
 
-// build the deck of cards
-$deck = buildDeck($suits, $cards);
-// // initialize a dealer and player hand
-$dealer = [];
-$player = [];
-// // dealer and player each draw two cards
-// array_push($dealer, array_shift($deck));
-// array_push($dealer, array_shift($deck));
-// array_push($player, array_shift($deck));
-// array_push($player, array_shift($deck));
-
-array_push($dealer, drawCard($deck));
-
-print_r($dealer);
-print_r($player);
-
-$dealerList = implode($dealer);
-
-// print_r($dealerList) . PHP_EOL;
-
-echo "this is dealer>>>" . $dealerList;
 // // echo the dealer hand, only showing the first card
 // // todo
 // // echo the player hand
