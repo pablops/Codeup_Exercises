@@ -1,4 +1,9 @@
 <?php
+echo "      =====================================
+      black---&---jack's===================
+      =================BLACKJACK===========\n";
+
+
 $suits = ['C', 'H', 'S', 'D'];
 $cards = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
 
@@ -88,8 +93,13 @@ function winnerCheck(&$totalPlayer, &$totalDealer){
 
 function displayCards($player){
 $sizeofhand = count($player);
-  if($sizeofhand == 2){
+static $thiscount = 0;
+  if($sizeofhand == 2 && $thiscount !== 1){
+    $thiscount += 1;
     echo ">> [" . getCardValue($player[0]) . "] [" . getCardValue($player[1]) . "]\n";
+  } elseif($thiscount === 1){
+    echo ">> [" . getCardValue($player[0]) . "] [???]\n";
+    $thiscount += 1;
   } elseif ($sizeofhand == 3) {
     echo "[" . getCardValue($player[0]) . "] [" . getCardValue($player[1]) . "] [" .
     getCardValue($player[2]) . "]\n";
@@ -143,12 +153,12 @@ echo "Player Cardz>>>";
 displayCards($player);
 // echo "\nPlayer Cards> [" . getCardValue($player[0]) . "] [" . getCardValue($player[1]) . "]";
 $totalPlayer = getCardValue($player[0]) + getCardValue($player[1]);
-echo "\nPlayer Total> " . $totalPlayer . PHP_EOL;
+echo "Player Total> " . $totalPlayer . PHP_EOL;
 // echo "\nDealer Cards> [" . getCardValue($dealer[0]) . "] [???]\n";
 echo "Dealer Cardz>>>";
 displayCards($dealer);
 $totalDealer = getCardValue($dealer[0]) + getCardValue($dealer[1]);
-echo "\nDealer Total> " . $totalDealer . PHP_EOL;
+// echo "\nDealer Total> " . $totalDealer . PHP_EOL;
 echo jackCheck($totalPlayer, $totalDealer, $deck, $player, $dealer);
 
 
