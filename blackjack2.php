@@ -17,9 +17,7 @@ $deck = [];
 }
 
 $deck = buildDeck($suits, $cards);
-// print_r($deck);
-// determine if a card is an ace
-// return true for ace, false for anything else
+
 function cardIsAce($thisCard) {
 	foreach($thisCard as $key => $card) {
 		if($key == 'A'){
@@ -43,10 +41,11 @@ function getCardValue($array) {
 }
 
 function handValue($player){
-  foreach($player as $key => value){
-    $hand += getCardValue($player);
+$hand = 0;
+  foreach($player as $key => $value){
+    $hand += getCardValue($value);
   }
-
+return $hand;
 }
 
 $deck = buildDeck($suits, $cards);
@@ -64,9 +63,6 @@ drawCard($dealer, $deck);
 drawCard($player, $deck);
 drawCard($dealer, $deck);
 
-
-
-
 function winnerCheck(&$totalPlayer, &$totalDealer){
   if ($totalDealer > $totalPlayer && $totalDealer < 22){
     echo "): DEALER WINS with $totalDealer :(\n";
@@ -82,6 +78,8 @@ function winnerCheck(&$totalPlayer, &$totalDealer){
     echo "DEALER TOTAL --> $totalDealer\nPLAYER TOTAL --> $totalPlayer\n";
   } else {
     echo "unaccounted scenario";
+    echo "PLAYER TOTAL IS: $totalPlayer";
+    echo "DEALER TOTAL IS: $totalDealer";
   }
 }
 
@@ -92,7 +90,7 @@ function dealerCheck(&$totalDealer, &$dealer, &$deck, &$totalPlayer){
       drawCard($dealer, $deck);
       echo "Dealer Cards> " . "[" . getCardValue($dealer[0]) . "] [" . 
           getCardValue($dealer[1]) . "] [" . getCardValue($dealer[2]) . "]";
-      $totalDealer = handValue($hand);
+      $totalDealer = handValue($dealer);
     } while ($totalDealer < 17);
   winnerCheck($totalPlayer, $totalDealer);      
   } else {
@@ -127,14 +125,13 @@ function jackCheck(&$totalPlayer, &$totalDealer, &$deck, &$player, &$dealer){
   }
 }
 
+print_r($deck);
+
 echo "\nPlayer Cards> [" . getCardValue($player[0]) . "] [" . getCardValue($player[1]) . "]";
 $totalPlayer = getCardValue($player[0]) + getCardValue($player[1]);
 echo "\nPlayer Total> " . $totalPlayer . PHP_EOL;
 echo "\nDealer Cards> [" . getCardValue($dealer[0]) . "] [???]\n";
 $totalDealer = getCardValue($dealer[0]) + getCardValue($dealer[1]);
-// echo "\nDealer Total> " . $totalDealer . PHP_EOL;
-// echo "total player: ";
-// print_r ($totalPlayer);
 echo jackCheck($totalPlayer, $totalDealer, $deck, $player, $dealer);
 
 
