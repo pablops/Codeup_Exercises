@@ -76,6 +76,9 @@ function winnerCheck(&$totalPlayer, &$totalDealer){
   } elseif ($totalPlayer > $totalDealer && $totalPlayer < 22) {
     echo "\n***YOU WIN!***\n";
     echo "DEALER TOTAL --> $totalDealer\nPLAYER TOTAL --> $totalPlayer\n";
+  } elseif ($totalPlayer > $totalDealer && totalPlayer > 21) {
+    echo "PLAYER BUST\nwith $totalPlayer
+    DEALER WINS!";
   } else {
     echo "unaccounted scenario";
     echo "PLAYER TOTAL IS: $totalPlayer";
@@ -83,13 +86,24 @@ function winnerCheck(&$totalPlayer, &$totalDealer){
   }
 }
 
+function displayCards($player){
+$sizeofhand = count($player);
+  if($sizeofhand == 2){
+    echo ">> [" . getCardValue($player[0]) . "] [" . getCardValue($player[1]) . "]\n";
+  } elseif ($sizeofhand == 3) {
+    echo "[" . getCardValue($player[0]) . "] [" . getCardValue($player[1]) . "] [" .
+    getCardValue($player[2]) . "]\n";
+  } elseif ($sizeofhand == 4){
+    echo "[" . getCardValue($player[0]) . "] [" . getCardValue($player[1]) . "] [" .
+    getCardValue($player[2]) . "] [" . getCardValue($player[3]) . "]\n";
+  }
+}
 
 function dealerCheck(&$totalDealer, &$dealer, &$deck, &$totalPlayer){
   if ($totalDealer < 17){
     do{
       drawCard($dealer, $deck);
-      echo "Dealer Cards> " . "[" . getCardValue($dealer[0]) . "] [" . 
-          getCardValue($dealer[1]) . "] [" . getCardValue($dealer[2]) . "]";
+      displayCards($dealer);
       $totalDealer = handValue($dealer);
     } while ($totalDealer < 17);
   winnerCheck($totalPlayer, $totalDealer);      
@@ -101,37 +115,40 @@ function dealerCheck(&$totalDealer, &$dealer, &$deck, &$totalPlayer){
 function jackCheck(&$totalPlayer, &$totalDealer, &$deck, &$player, &$dealer){
   if($totalPlayer > 21){
     echo "BUST GAME OVER BUST\n";
-  }
-  elseif($totalPlayer == 21){
+  } elseif($totalPlayer == 21){
     echo "\n*21*YOU WIN!*21*\n";
   } elseif($totalDealer == 21) {
     echo "): DEALER WINS :(\nDEALER TOTAL: $totalDealer";
   } else {
      echo '(H)it or (S)tand? ';
-        // Get array key
-        $answer = trim(fgets(STDIN));;
+        $answer = trim(fgets(STDIN));
         if($answer == 'H') {
           array_push($player, array_shift($deck));
-          echo "Player Cards> " . "[" . getCardValue($player[0]) . "] [" . 
-          getCardValue($player[1]) . "] [" . getCardValue($player[2]) . "]";
+          displayCards($player);
           $totalPlayer = $totalPlayer + getCardValue($player[2]);
           echo "\nPlayer Total " . $totalPlayer . PHP_EOL;
-          dealerCheck($totalDealer, $dealer, $deck, $totalPlayer);
-          } else {
-          dealerCheck($totalDealer, $dealer, $deck, $totalPlayer);
-          jackCheck($totalPlayer, $totalDealer, $deck, $player, $dealer);
-          winnerCheck($totalPlayer, $totalDealer);
+          if($totalPlayer < 22){
+            jackCheck($totalPlayer, $totalDealer, $deck, $player, $dealer);
+          }
+        } 
+        else {
+            dealerCheck($totalDealer, $dealer, $deck, $totalPlayer);
+            jackCheck($totalPlayer, $totalDealer, $deck, $player, $dealer);
+            winnerCheck($totalPlayer, $totalDealer);
         }
   }
 }
 
-print_r($deck);
-
-echo "\nPlayer Cards> [" . getCardValue($player[0]) . "] [" . getCardValue($player[1]) . "]";
+echo "Player Cardz>>>";
+displayCards($player);
+// echo "\nPlayer Cards> [" . getCardValue($player[0]) . "] [" . getCardValue($player[1]) . "]";
 $totalPlayer = getCardValue($player[0]) + getCardValue($player[1]);
 echo "\nPlayer Total> " . $totalPlayer . PHP_EOL;
-echo "\nDealer Cards> [" . getCardValue($dealer[0]) . "] [???]\n";
+// echo "\nDealer Cards> [" . getCardValue($dealer[0]) . "] [???]\n";
+echo "Dealer Cardz>>>";
+displayCards($dealer);
 $totalDealer = getCardValue($dealer[0]) + getCardValue($dealer[1]);
+echo "\nDealer Total> " . $totalDealer . PHP_EOL;
 echo jackCheck($totalPlayer, $totalDealer, $deck, $player, $dealer);
 
 

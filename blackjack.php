@@ -113,7 +113,7 @@ $player = [];
 // array_push($player, array_shift($deck));
 // array_push($player, array_shift($deck));
 
-array_push($dealer, drawCard($deck));
+drawCard($deck));
 
 print_r($dealer);
 print_r($player);
