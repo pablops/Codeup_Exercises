@@ -42,8 +42,8 @@ function cardIsAce($thisCard) {
 // print_r($deck);
 // determine the value of an individual card (string)
 // aces are worth 11
-function getCardValue($card) {
-  foreach($card as $key => $value){
+function getCardValue($array) {
+  foreach($array as $key => $value){
   	if($key != 'A' && is_numeric($key)){
   		return $key;
   	} elseif($key != 'A'){
@@ -53,21 +53,21 @@ function getCardValue($card) {
   	}
   }
 }
-
-echo (getCardValue($deck[32])) . PHP_EOL;
-echo (getCardValue($deck[11])) . PHP_EOL;
+// echo (getCardValue($deck[32])) . PHP_EOL;
+// echo (getCardValue($deck[11])) . PHP_EOL;
 // // get total value for a hand of cards
 // // don't forget to factor in aces
 // // aces can be 1 or 11 (make them 1 if total value is over 21)
-function getHandTotal($hand) {
-  $count = 0;
-  foreach($hand as $card){
-  	$count = $count + getCardValue($hand);
-  }
-  return $count;
-}
+// GET HAND TOTAL FUNCTION:
+// function getHandTotal($hand) {
+//   foreach($hand as $key => $value){
+//     $count = getCardValue($hand[0]) + getCardValue($hand[1]);
+//     return $count; 
+//   }
+// }
+// END OF GET HAND TOTAL FUNCTION. 
 
-echo getHandTotal($deck[32], $deck[14]);
+// echo getHandTotal($deck[32], $deck[14]);
 
 // build the deck of cards
 $deck = buildDeck($suits, $cards);
@@ -87,46 +87,69 @@ function drawCards(&$deck, &$dealer, &$player) {
 }
 
 drawCards($deck, $dealer, $player);
-echo "dealer: ";
-var_dump($dealer);
-echo "player: ";
-var_dump($player);
+// echo "dealer: ";
+// var_dump($dealer);
+// echo "player: ";
+// var_dump($player);
 
-echo "first card is " . getCardValue($player[0]) . " ";
-// echo "second card is " . getCardValue($deck[1]) . " ";
-// echo "value of hand is " . $hand . PHP_EOL;
+function winnerCheck($totalPlayer, $totalDealer){
+  if ($totalDealer > $totalPlayer){
+    echo "): DEALER WINS :(\n";
+  } elseif ($totalDealer == $totalPlayer){
+    echo "PUSH\n";
+  } else {
+    echo "***YOU WIN!***\n";
+  }
+}
 
-// // print out a hand of cards
-// // name is the name of the player
-// // hidden is to initially show only first card of hand (for dealer)
-// // output should look like this:
-// // Dealer: [4 C] [???] Total: ???
-// // or:
-// PROBLEM STARTS HERE:
-// // Player: [J D] [2 D] Total: 12
-// function echoHand($hand, $name, $hidden = false) {
-//   echo "$name: " ;
-//   echo $deck[0];
-// }
+function dealerHS($totalDealer){
+  if($totalDealer >= 16){
+    break;
+  }
+  else{
+    //ADD A CARD TO DEALER. 
+  }
+}
 
-// echoHand($hand, "PABLO");
+function jackCheck(&$totalPlayer, &$totalDealer, &$deck, &$player){
+  if($totalPlayer > 21){
+    echo "BUST GAME OVER BUST\n";
+  }
+  elseif($totalPlayer == 21){
+    echo "*21*YOU WIN!*21*\n";
+  } elseif($totalDealer == 21) {
+    echo "): DEALER WINS :(\n";
+  } else {
+     echo '(H)it or (S)tand? ';
+        // Get array key
+        $answer = trim(fgets(STDIN));;
+        if($answer == 'H') {
+          array_push($player, array_shift($deck));
+          echo "Player Cards> " . "[" . getCardValue($player[0]) . "] [" . 
+          getCardValue($player[1]) . "] [" . getCardValue($player[2]) . "]";
+          $totalPlayer = $totalPlayer + getCardValue($player[2]) . PHP_EOL;
+          echo "\nPlayer Total " . $totalPlayer . PHP_EOL;
+          jackCheck($totalPlayer, $totalDealer, $deck, $player);
+          } else {
+          winnerCheck($totalPlayer, $totalDealer);
+        }
+  }
+}
 
-// // echo the dealer hand, only showing the first card
-// // todo
-// // echo the player hand
-// // todo
-// // allow player to "(H)it or (S)tay?" till they bust (exceed 21) or stay
-// while (/* todo */) {
-//   // todo
-// }
-// // show the dealer's hand (all cards)
-// // todo
-// // todo (all comments below)
-// // at this point, if the player has more than 21, tell them they busted
-// // otherwise, if they have 21, tell them they won (regardless of dealer hand)
-// // if neither of the above are true, then the dealer needs to draw more cards
-// // dealer draws until their hand has a value of at least 17
-// // show the dealer hand each time they draw a card
-// // finally, we can check and see who won
-// // by this point, if dealer has busted, then player automatically wins
-// // if player and dealer tie, it is a "push"
+echo "\nPlayer Cards> [" . getCardValue($player[0]) . "] [" . getCardValue($player[1]) . "]";
+$totalPlayer = getCardValue($player[0]) + getCardValue($player[1]);
+echo "\nPlayer Total> " . $totalPlayer . PHP_EOL;
+echo "\nDealer Cards> [" . getCardValue($dealer[0]) . "] [" . getCardValue($dealer[1]) . "]";
+$totalDealer = getCardValue($dealer[0]) + getCardValue($dealer[1]);
+echo "\nDealer Total> " . $totalDealer . PHP_EOL;
+echo "total player: ";
+print_r ($totalPlayer);
+echo jackCheck($totalPlayer, $totalDealer, $deck, $player);
+
+
+
+
+
+
+
+
