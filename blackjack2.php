@@ -9,15 +9,13 @@ $deck = [];
   foreach($suits as $suit){
   	foreach($cards as $card){
   		$combo = [$card => $suit];
-  		// print_r($combo);
   		array_push($deck, $combo);
   	}
   }
-  // print_r($deck);
-  // print_r($deck)[3];
   shuffle($deck);
   return $deck;
 }
+
 $deck = buildDeck($suits, $cards);
 // print_r($deck);
 // determine if a card is an ace
@@ -32,16 +30,6 @@ function cardIsAce($thisCard) {
 	}
 }
 
-// print_r($deck[3]);
-
-// var_dump(cardIsAce($deck[39]));
-// var_dump(array_keys($deck[39]));
-// print_r($deck[39]);
-// var_dump (array_keys($deck[39]));
-// TO PRINT WHOLE DECK:
-// print_r($deck);
-// determine the value of an individual card (string)
-// aces are worth 11
 function getCardValue($array) {
   foreach($array as $key => $value){
   	if($key != 'A' && is_numeric($key)){
@@ -53,72 +41,73 @@ function getCardValue($array) {
   	}
   }
 }
-// echo (getCardValue($deck[32])) . PHP_EOL;
-// echo (getCardValue($deck[11])) . PHP_EOL;
-// // get total value for a hand of cards
-// // don't forget to factor in aces
-// // aces can be 1 or 11 (make them 1 if total value is over 21)
-// GET HAND TOTAL FUNCTION:
-// function getHandTotal($hand) {
-//   foreach($hand as $key => $value){
-//     $count = getCardValue($hand[0]) + getCardValue($hand[1]);
-//     return $count; 
-//   }
-// }
-// END OF GET HAND TOTAL FUNCTION. 
 
-// echo getHandTotal($deck[32], $deck[14]);
+function handValue($player){
+  foreach($player as $key => value){
+    $hand += getCardValue($player);
+  }
 
-// build the deck of cards
+}
+
 $deck = buildDeck($suits, $cards);
 // // initialize a dealer and player hand
 $dealer = [];
 $player = [];
-// // draw a card from the deck into a hand
-// // pass by reference (both hand and deck passed in are modified)
-function drawCards(&$deck, &$dealer, &$player) {
-	// dealer and player each draw two cards
-  array_push($dealer, array_shift($deck));
-  array_push($dealer, array_shift($deck));
+
+function drawCard(&$player, &$deck){
   array_push($player, array_shift($deck));
-  array_push($player, array_shift($deck));
-  return($player);
-  return($dealer);
 }
 
-drawCards($deck, $dealer, $player);
-// echo "dealer: ";
-// var_dump($dealer);
-// echo "player: ";
-// var_dump($player);
+// drawCards($deck, $dealer, $player);
+drawCard($player, $deck);
+drawCard($dealer, $deck);
+drawCard($player, $deck);
+drawCard($dealer, $deck);
 
-function winnerCheck($totalPlayer, $totalDealer){
-  if ($totalDealer > $totalPlayer){
-    echo "): DEALER WINS :(\n";
+
+
+
+function winnerCheck(&$totalPlayer, &$totalDealer){
+  if ($totalDealer > $totalPlayer && $totalDealer < 22){
+    echo "): DEALER WINS with $totalDealer :(\n";
+    // echo "DEALER TOTAL-> $totalDealer\n";
+    // echo "PLAYER TOTAL-> $totalPlayer\n";
   } elseif ($totalDealer == $totalPlayer){
-    echo "PUSH\n";
+    echo "PUSH\n $totalPlayer & $totalDealer";
+  } elseif ($totalDealer > 21){
+    echo "DEALER BUST\nwith $totalDealer 
+    ***YOU WIN!***\n";
+  } elseif ($totalPlayer > $totalDealer && $totalPlayer < 22) {
+    echo "\n***YOU WIN!***\n";
+    echo "DEALER TOTAL --> $totalDealer\nPLAYER TOTAL --> $totalPlayer\n";
   } else {
-    echo "***YOU WIN!***\n";
+    echo "unaccounted scenario";
   }
 }
 
-function dealerHS($totalDealer){
-  if($totalDealer >= 16){
-    break;
-  }
-  else{
-    //ADD A CARD TO DEALER. 
+
+function dealerCheck(&$totalDealer, &$dealer, &$deck, &$totalPlayer){
+  if ($totalDealer < 17){
+    do{
+      drawCard($dealer, $deck);
+      echo "Dealer Cards> " . "[" . getCardValue($dealer[0]) . "] [" . 
+          getCardValue($dealer[1]) . "] [" . getCardValue($dealer[2]) . "]";
+      $totalDealer = handValue($hand);
+    } while ($totalDealer < 17);
+  winnerCheck($totalPlayer, $totalDealer);      
+  } else {
+    winnerCheck($totalPlayer, $totalDealer);
   }
 }
 
-function jackCheck(&$totalPlayer, &$totalDealer, &$deck, &$player){
+function jackCheck(&$totalPlayer, &$totalDealer, &$deck, &$player, &$dealer){
   if($totalPlayer > 21){
     echo "BUST GAME OVER BUST\n";
   }
   elseif($totalPlayer == 21){
-    echo "*21*YOU WIN!*21*\n";
+    echo "\n*21*YOU WIN!*21*\n";
   } elseif($totalDealer == 21) {
-    echo "): DEALER WINS :(\n";
+    echo "): DEALER WINS :(\nDEALER TOTAL: $totalDealer";
   } else {
      echo '(H)it or (S)tand? ';
         // Get array key
@@ -127,10 +116,12 @@ function jackCheck(&$totalPlayer, &$totalDealer, &$deck, &$player){
           array_push($player, array_shift($deck));
           echo "Player Cards> " . "[" . getCardValue($player[0]) . "] [" . 
           getCardValue($player[1]) . "] [" . getCardValue($player[2]) . "]";
-          $totalPlayer = $totalPlayer + getCardValue($player[2]) . PHP_EOL;
+          $totalPlayer = $totalPlayer + getCardValue($player[2]);
           echo "\nPlayer Total " . $totalPlayer . PHP_EOL;
-          jackCheck($totalPlayer, $totalDealer, $deck, $player);
+          dealerCheck($totalDealer, $dealer, $deck, $totalPlayer);
           } else {
+          dealerCheck($totalDealer, $dealer, $deck, $totalPlayer);
+          jackCheck($totalPlayer, $totalDealer, $deck, $player, $dealer);
           winnerCheck($totalPlayer, $totalDealer);
         }
   }
@@ -139,12 +130,12 @@ function jackCheck(&$totalPlayer, &$totalDealer, &$deck, &$player){
 echo "\nPlayer Cards> [" . getCardValue($player[0]) . "] [" . getCardValue($player[1]) . "]";
 $totalPlayer = getCardValue($player[0]) + getCardValue($player[1]);
 echo "\nPlayer Total> " . $totalPlayer . PHP_EOL;
-echo "\nDealer Cards> [" . getCardValue($dealer[0]) . "] [" . getCardValue($dealer[1]) . "]";
+echo "\nDealer Cards> [" . getCardValue($dealer[0]) . "] [???]\n";
 $totalDealer = getCardValue($dealer[0]) + getCardValue($dealer[1]);
-echo "\nDealer Total> " . $totalDealer . PHP_EOL;
-echo "total player: ";
-print_r ($totalPlayer);
-echo jackCheck($totalPlayer, $totalDealer, $deck, $player);
+// echo "\nDealer Total> " . $totalDealer . PHP_EOL;
+// echo "total player: ";
+// print_r ($totalPlayer);
+echo jackCheck($totalPlayer, $totalDealer, $deck, $player, $dealer);
 
 
 
