@@ -1,0 +1,4 @@
+2015-18-03
+2015-18-03
+2015-18-03 INFO This is an info message.
+2015-18-03 ERROR This is an info message.
