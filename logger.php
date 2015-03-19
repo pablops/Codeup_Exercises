@@ -5,7 +5,7 @@ function logMessage($logLevel, $message) {
     $time = date('g:i:s');
 	$filename = "log-$date.txt";
 	$handle = fopen($filename, 'a+');
-	fwrite($handle, $date . " " . $logLevel . " " . $message . PHP_EOL);
+	fwrite($handle, $date . " " . $time . " [" . $logLevel . "] " . $message . PHP_EOL);
 }
 
 logMessage("INFO", "This is an info message.");
