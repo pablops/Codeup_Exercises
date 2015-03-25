@@ -123,30 +123,36 @@ function dealerCheck(&$totalDealer, &$dealer, &$deck, &$totalPlayer){
 }
 
 function jackCheck(&$totalPlayer, &$totalDealer, &$deck, &$player, &$dealer){
-  if($totalPlayer > 21){
-    echo "BUST GAME OVER BUST\n";
-  } elseif($totalPlayer == 21){
-    echo "\n*21*YOU WIN!*21*\n";
-  } elseif($totalDealer == 21) {
-    echo "): DEALER WINS :(\nDEALER TOTAL: $totalDealer";
-  } else {
-     echo '(H)it or (S)tand? ';
-        $answer = trim(fgets(STDIN));
-        if($answer == 'H') {
-          array_push($player, array_shift($deck));
-          displayCards($player);
-          $totalPlayer = $totalPlayer + getCardValue($player[2]);
-          echo "\nPlayer Total " . $totalPlayer . PHP_EOL;
-          if($totalPlayer < 22){
-            jackCheck($totalPlayer, $totalDealer, $deck, $player, $dealer);
+$gameActive = true;  
+    if($totalPlayer > 21){
+      echo "BUST GAME OVER BUST\n";
+      $gameActive = false;
+    } elseif($totalPlayer == 21){
+      echo "\n*21*YOU WIN!*21*\n";
+      $gameActive = false;
+    } elseif($totalDealer == 21) {
+      echo "): DEALER WINS :(\nDEALER TOTAL: $totalDealer";
+      $gameActive = false;
+    } else {
+       echo '(H)it or (S)tand? ';
+          $answer = trim(fgets(STDIN));
+          if($answer == 'H' ) {
+            array_push($player, array_shift($deck));
+            displayCards($player);
+            $totalPlayer = $totalPlayer + getCardValue($player[2]);
+            echo "\nPlayer Total " . $totalPlayer . PHP_EOL;
+            if(($totalPlayer < 22) && ($gameActive === true)) {
+              jackCheck($totalPlayer, $totalDealer, $deck, $player, $dealer);
+            }
+          } 
+          else {
+            if($gameActive === true){
+              dealerCheck($totalDealer, $dealer, $deck, $totalPlayer);
+              jackCheck($totalPlayer, $totalDealer, $deck, $player, $dealer);
+              winnerCheck($totalPlayer, $totalDealer);
+            }
           }
-        } 
-        else {
-            dealerCheck($totalDealer, $dealer, $deck, $totalPlayer);
-            jackCheck($totalPlayer, $totalDealer, $deck, $player, $dealer);
-            winnerCheck($totalPlayer, $totalDealer);
-        }
-  }
+    }
 }
 
 echo "Player Cardz>>>";

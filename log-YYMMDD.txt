@@ -1,0 +1,2 @@
+[2015/03/25 10:08:14]: [INFO]: [Info message]
+[2015/03/25 10:08:14]: [ERROR]: [ERRORmessage]

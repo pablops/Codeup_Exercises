@@ -1,0 +1,4 @@
+[2015/03/25 09:36:33]: [INFO]: [Info message]
+[2015/03/25 09:36:33]: [ERROR]: [ERRORmessage]
+[2015/03/25 09:36:33]: [INFO]: [Second instance info message]
+[2015/03/25 09:36:33]: [ERROR]: [Second instance error message]
