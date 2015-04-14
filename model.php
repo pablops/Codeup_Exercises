@@ -69,11 +69,14 @@ class Model {
                 echo "UPDATING\n";
                 $stmt= self::$dbc->prepare("UPDATE " . static::$table . 
                                            " SET first_name = :first_name, 
-                                             last_name = :last_name,
-                                             email = :email,
-                                             birth_date = cast(:birth_date as DATE)
+                                             last_name      = :last_name,
+                                             email          = :email,
+                                             birth_date     = cast(:birth_date as DATE)
                                              WHERE id=:id");
-                var_dump($stmt);
+                // var_dump($stmt);
+
+
+
                 $stmt->bindValue(':first_name', $this->attributes['first_name'], PDO::PARAM_STR);
                 $stmt->bindValue(':last_name', $this->attributes['last_name'], PDO::PARAM_STR);
                 $stmt->bindValue(':email', $this->attributes['email'], PDO::PARAM_STR);
@@ -85,8 +88,7 @@ class Model {
                 echo "running else statement\n";
                 $stmt = self::$dbc->prepare("INSERT INTO " . static::$table . " (first_name, last_name, email, birth_date)
                                             VALUES (:first_name, :last_name, :email, cast(:birth_date as DATE));");
-                var_dump($stmt);
-                // var_dump($this->attributes);
+                // var_dump($stmt);
                 $stmt->bindValue(':first_name', $this->attributes['first_name'], PDO::PARAM_STR);
                 $stmt->bindValue(':last_name', $this->attributes['last_name'], PDO::PARAM_STR);
                 $stmt->bindValue(':email', $this->attributes['email'], PDO::PARAM_STR);
@@ -137,9 +139,31 @@ class Model {
         return self::$dbc->query("SELECT * FROM " . static::$table . ';')->fetchAll(PDO::FETCH_ASSOC);
     }
 
+
+
+    public static function delete($id) 
+    {
+        // Get connection to the database
+        self::dbConnect();
+        // @TODO: Create select statement using prepared statements
+        $stmt = self::$dbc->prepare("DELETE FROM " . static::$table . " WHERE id= :id");
+        $stmt->bindValue(":id", $id, PDO::PARAM_INT);
+        $stmt->execute();
+        // @TODO: Store the resultset in a variable named $result
+
+    }    
+
 }
 
-$test = new Model;
-$test->dbConnect();
+// $test = new Model;
+// $test->dbConnect();
 
 ?>
+
+
+
+
+
+
+
+
