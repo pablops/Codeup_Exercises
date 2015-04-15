@@ -6,12 +6,10 @@ define("DB_USER", "contacts_user");
 define("DB_PASS", "codeup");
 
 class Model {
-
     protected static $dbc;
     protected static $table;
 
     private $attributes = array();
-
     public function __construct()
     {
         self::dbConnect();
@@ -118,7 +116,7 @@ class Model {
         $stmt->bindValue(":id", $id, PDO::PARAM_INT);
         $stmt->execute();
         // @TODO: Store the resultset in a variable named $result
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
         // The following code will set the attributes on the calling object based on the result variable's contents
 
         $instance = null;
@@ -154,16 +152,6 @@ class Model {
     }    
 
 }
-
 // $test = new Model;
 // $test->dbConnect();
-
 ?>
-
-
-
-
-
-
-
-
